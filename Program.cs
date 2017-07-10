@@ -7,11 +7,20 @@ using System.Threading;
 
 namespace ThreadEventDemo01
 {
-    // This program starts 2 simple threads.
-    // And then waits for the threads to end.
-    // The purpose of this program is to demonstrate
-    // the use of the ManualResetEvent class to
-    // wait for an event.
+    // TODO: Add comments.
+    //
+    // Program flow:
+    //
+    // 1. Start two threads.
+    //
+    // 2. Thread 1 monitors the file system to look out for a file. It operates in a loop.
+    //
+    // 2.1 When the file is found, m_event_file_arrived is set. Thread 1 breaks out of loop.
+    //
+    // 2.2 Else, Thread 1 blocks for 1 second and the loop reiterates.
+    //
+    // 3. Thread 2 waits on the event to be set. Once event is set, it reads from the file
+    // and displays its contents on the console.
     class Program
     {
         static string filepath = @"D:\David\test\my_file.txt";
@@ -45,6 +54,7 @@ namespace ThreadEventDemo01
         static void StartThread02()
         {
             m_event_file_arrived.WaitOne();
+            m_event_file_arrived.Reset();
             string str_FileContents = File.ReadAllText(filepath);
             Console.WriteLine(str_FileContents);
         }
@@ -61,6 +71,6 @@ namespace ThreadEventDemo01
 
         private static Thread m_thread_01 = null;
         private static Thread m_thread_02 = null;
-        private static ManualResetEvent m_event_file_arrived = null;
+        private static ManualResetEvent m_event_file_arrived = new ManualResetEvent(false);
     }
 }
