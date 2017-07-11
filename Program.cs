@@ -94,7 +94,7 @@ namespace ThreadEventDemo01
 
             // Note: While not absolutely necessary, it is a recommended 
             // practice to reset an event to non-signalled state after
-            // waiting on them.
+            // waiting on it.
             m_event_file_arrived.Reset();
             string str_FileContents = File.ReadAllText(filepath);
             Console.WriteLine(str_FileContents);
