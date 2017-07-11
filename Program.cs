@@ -21,6 +21,7 @@ namespace ThreadEventDemo01
     //
     // 3. Thread 2 waits on the event to be set. Once event is set, it reads from the file
     // and displays its contents on the console.
+
     class Program
     {
         static string filepath = @"D:\David\test\my_file.txt";
@@ -34,6 +35,18 @@ namespace ThreadEventDemo01
         }
 
         static void StartThread01()
+        {
+            m_thread_01 = new Thread(new ThreadStart(WorkerThreadMethod01));
+            m_thread_01.Start();
+        }
+
+        static void StartThread02()
+        {
+            m_thread_02 = new Thread(new ThreadStart(WorkerThreadMethod02));
+            m_thread_02.Start();
+        }
+
+        static void WorkerThreadMethod01()
         {
             Console.WriteLine("Waiting for file...");
 
@@ -51,7 +64,7 @@ namespace ThreadEventDemo01
             }
         }
 
-        static void StartThread02()
+        static void WorkerThreadMethod02()
         {
             m_event_file_arrived.WaitOne();
             m_event_file_arrived.Reset();
