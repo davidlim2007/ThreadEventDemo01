@@ -46,6 +46,17 @@ namespace ThreadEventDemo01
             m_thread_02.Start();
         }
 
+        // This method represents the entry-point for Thread 01.
+        //
+        // Thread 01 monitors the file system for the existence of a
+        // file. 
+        //
+        // In a while-loop, it checks for the existence of the
+        // file. If the file is not found, the thread goes to
+        // sleep for 1 second before the loop reiterates.
+        //
+        // If the file is found, the thread sets the m_event_file_arrived
+        // event to signalled state and breaks out of the loop.
         static void WorkerThreadMethod01()
         {
             Console.WriteLine("Waiting for file...");
@@ -64,9 +75,26 @@ namespace ThreadEventDemo01
             }
         }
 
+        // This method represents the entry-point for Thread 02.
+        //
+        // Thread 02 reads from the specified file upon its discovery.
+        //
+        // Firstly, it waits for the m_event_file_arrived event to be
+        // signalled (i.e. when the file is found on the system).
+        //
+        // Once the event is signalled, the thread reads from the file
+        // and displays its contents on the console.
         static void WorkerThreadMethod02()
         {
+            // Much like Mutexes, the ManualResetEvent class
+            // has a WaitOne() method. This method blocks the
+            // calling thread until the event is set to
+            // signalled state.
             m_event_file_arrived.WaitOne();
+
+            // Note: While not absolutely necessary, it is a recommended 
+            // practice to reset an event to non-signalled state after
+            // waiting on them.
             m_event_file_arrived.Reset();
             string str_FileContents = File.ReadAllText(filepath);
             Console.WriteLine(str_FileContents);
@@ -84,6 +112,11 @@ namespace ThreadEventDemo01
 
         private static Thread m_thread_01 = null;
         private static Thread m_thread_02 = null;
+
+        // A ManualResetEvent object that signifies the arrival of a 
+        // particular file.
+        //
+        // It is initially set to default (non-signalled) state.
         private static ManualResetEvent m_event_file_arrived = new ManualResetEvent(false);
     }
 }
